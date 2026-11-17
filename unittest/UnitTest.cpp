@@ -4344,6 +4344,7 @@ bool TestThreadManager();
 bool TestVFS();
 bool TestZipSlip();
 bool TestPS1Eboot();
+bool TestOREBlockDevice();
 bool TestLzrc();
 bool TestKirkEcdsa();
 bool TestKirkEcdsaBench();
@@ -4991,6 +4992,7 @@ TestItem availableTests[] = {
 	TEST_ITEM(CmdLine),
 	TEST_ITEM(ZipSlip),
 	TEST_ITEM(PS1Eboot),
+	TEST_ITEM(OREBlockDevice),
 	TEST_ITEM(Lzrc),
 	TEST_ITEM(KirkEcdsa),
 	TEST_ITEM(KirkEcdsaBench),
