@@ -788,7 +788,9 @@ if(USE_SMELT)
 	target_include_directories(Core PRIVATE ${SMELT_INCLUDE_DIR})
 	target_link_libraries(Core ${SMELT_LIBRARY})
 	if(WIN32)
-		target_link_libraries(Core ws2_32 userenv ntdll bcrypt)
+		# What cargo's --print native-static-libs names for an MSVC build of smelt. That build uses the
+		# DLL C runtime, as CMake's MSVC default does; Windows/smelt.props's /MT one needs +crt-static.
+		target_link_libraries(Core bcrypt advapi32 kernel32 ntdll userenv ws2_32 dbghelp synchronization)
 	elseif(UNIX)
 		target_link_libraries(Core pthread dl m)
 	endif()
