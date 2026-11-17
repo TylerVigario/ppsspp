@@ -261,9 +261,13 @@ BlockDevice *ConstructBlockDevice(FileLoader *fileLoader, std::string *errorStri
 		}
 	} else if (!memcmp(buffer, "MComprHD", 8)) {
 		device = new CHDFileBlockDevice(fileLoader);
+	} else if (!memcmp(buffer, "ORE", 3) && buffer[3] >= '0' && buffer[3] <= '9') {
+		// Any layout's: smelt says itself which it can't read
 #ifdef USE_SMELT
-	} else if (!memcmp(buffer, "ORE1", 4)) {
 		device = new OREFileBlockDevice(fileLoader);
+#else
+		*errorString = "This build of PPSSPP can't read ORE images";
+		return nullptr;
 #endif
 	}
 

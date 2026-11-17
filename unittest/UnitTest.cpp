@@ -4345,6 +4345,7 @@ bool TestVFS();
 bool TestZipSlip();
 bool TestPS1Eboot();
 bool TestOREBlockDevice();
+bool TestOREMagic();
 bool TestLzrc();
 bool TestKirkEcdsa();
 bool TestKirkEcdsaBench();
@@ -4993,6 +4994,7 @@ TestItem availableTests[] = {
 	TEST_ITEM(ZipSlip),
 	TEST_ITEM(PS1Eboot),
 	TEST_ITEM(OREBlockDevice),
+	TEST_ITEM(OREMagic),
 	TEST_ITEM(Lzrc),
 	TEST_ITEM(KirkEcdsa),
 	TEST_ITEM(KirkEcdsaBench),

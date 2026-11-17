@@ -17,6 +17,7 @@
 
 // OREFileBlockDevice: every ORE in PPSSPP_ORE_TEST_DIR, read block by block, against the ISO of
 // its name beside it. Skipped when it isn't set, or without smelt.
+// And a file with an ORE's magic but no ORE in it, refused, with smelt or without.
 
 #include <algorithm>
 #include <cstdlib>
@@ -107,4 +108,33 @@ bool TestOREBlockDevice() {
 	EXPECT_TRUE(tested > 0);
 	return true;
 #endif
+}
+
+// A file with an ORE's magic that holds no ORE, of this layout or a later one, is refused with an
+// error naming ORE: by smelt with it, and as unreadable without it, rather than read as an ISO.
+bool TestOREMagic() {
+	const Path dir = UnitTestTempPath("unittest_ore_magic");
+	File::DeleteDirRecursively(dir);
+	EXPECT_TRUE(File::CreateFullPath(dir));
+
+	for (const char *magic : { "ORE1", "ORE9" }) {
+		std::vector<u8> data(0x9000, 0);
+		memcpy(data.data(), magic, 4);
+		const Path path = dir / (std::string(magic) + ".ore");
+		EXPECT_TRUE(File::WriteDataToFile(false, data.data(), data.size(), path));
+		std::unique_ptr<FileLoader> loader(ConstructFileLoader(path));
+
+		std::string error;
+		std::unique_ptr<BlockDevice> device(ConstructBlockDevice(loader.get(), &error));
+		EXPECT_TRUE(device == nullptr);
+		EXPECT_TRUE(error.find("ORE") != std::string::npos);
+
+		error.clear();
+		EXPECT_EQ_INT((int)Identify_File(loader.get(), &error), (int)IdentifiedFileType::UNKNOWN_ISO);
+		EXPECT_TRUE(error.find("ORE") != std::string::npos);
+		printf("ORE: %s refused: %s\n", magic, error.c_str());
+	}
+
+	File::DeleteDirRecursively(dir);
+	return true;
 }

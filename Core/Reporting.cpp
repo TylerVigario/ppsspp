@@ -451,7 +451,7 @@ namespace Reporting
 			cachedContainer = "cso";
 		} else if (!memcmp(header, "MComprHD", 8)) {
 			cachedContainer = "chd";
-		} else if (!memcmp(header, "ORE1", 4)) {
+		} else if (!memcmp(header, "ORE", 3) && header[3] >= '0' && header[3] <= '9') {
 			cachedContainer = "ore";
 		} else if (!memcmp(header, "\0PBP", 4)) {
 			cachedContainer = "pbp";
