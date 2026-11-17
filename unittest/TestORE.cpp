@@ -45,9 +45,14 @@ bool TestOREBlockDevice() {
 	}
 	std::vector<File::FileInfo> files;
 	File::GetFilesInDir(Path(dir), &files, "ore");
-	EXPECT_TRUE(!files.empty());
 
+	int tested = 0;
 	for (const auto &file : files) {
+		// The filter passes folders, such as a store's .ore-store on Windows, where a dot doesn't
+		// hide it, and files with no extension
+		if (file.isDirectory || file.fullName.GetFileExtension() != ".ore") {
+			continue;
+		}
 		const Path ore = file.fullName;
 		const Path iso = ore.WithReplacedExtension(".iso");
 		std::unique_ptr<FileLoader> oreLoader(ConstructFileLoader(ore));
@@ -97,7 +102,9 @@ bool TestOREBlockDevice() {
 		EXPECT_FALSE(oreDevice->ReadBlock((int)blocks, single.data()));
 
 		printf("ORE: %s, %u blocks, every one the ISO's\n", ore.GetFilename().c_str(), blocks);
+		tested++;
 	}
+	EXPECT_TRUE(tested > 0);
 	return true;
 #endif
 }
