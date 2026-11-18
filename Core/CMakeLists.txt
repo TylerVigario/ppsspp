@@ -780,7 +780,8 @@ endif()
 # built with cargo from oxyROMon's crates/smelt-rs, under SMELT_DIR
 if(USE_SMELT)
 	find_path(SMELT_INCLUDE_DIR smelt.h HINTS ${SMELT_DIR}/include ${SMELT_DIR} NO_DEFAULT_PATH)
-	find_library(SMELT_LIBRARY NAMES smelt libsmelt.a HINTS ${SMELT_DIR}/lib ${SMELT_DIR}/target/release ${SMELT_DIR} NO_DEFAULT_PATH)
+	# The static library by its file name: cargo builds the shared one beside it, which "smelt" finds first
+	find_library(SMELT_LIBRARY NAMES libsmelt.a smelt.lib HINTS ${SMELT_DIR}/lib ${SMELT_DIR}/target/release ${SMELT_DIR} NO_DEFAULT_PATH)
 	if(NOT SMELT_INCLUDE_DIR OR NOT SMELT_LIBRARY)
 		message(FATAL_ERROR "USE_SMELT is ON but smelt.h or libsmelt is not under SMELT_DIR (${SMELT_DIR})")
 	endif()
